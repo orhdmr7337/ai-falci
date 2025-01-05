@@ -143,14 +143,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // Fal istatistikleri grafiği
+const chartData = {
+    labels: {{ chart_data.labels | tojson | safe }},
+    values: {{ chart_data.values | tojson | safe }}
+};
+
 const ctx = document.getElementById('readingsChart').getContext('2d');
 new Chart(ctx, {
     type: 'line',
     data: {
-        labels: {{ chart_data.labels | tojson }},
+        labels: chartData.labels,
         datasets: [{
             label: 'Günlük Fal Sayısı',
-            data: {{ chart_data.values | tojson }},
+            data: chartData.values,
             borderColor: '#C77DFF',
             tension: 0.4
         }]
@@ -159,7 +164,7 @@ new Chart(ctx, {
         responsive: true,
         plugins: {
             legend: {
-                position: 'top',
+                position: 'top'
             }
         }
     }
