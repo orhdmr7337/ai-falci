@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Girişi - Falcı ZEKA{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2><i class="fas fa-user-shield"></i> Admin Girişi</h2>
+        <form id="adminLoginForm" class="auth-form">
+            <div class="form-group">
+                <label for="email">E-posta</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="cosmic-button admin-btn">
+                <i class="fas fa-sign-in-alt"></i> Giriş Yap
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+    };
+    
+    try {
+        const response = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            localStorage.setItem('token', data.token);
+            showNotification('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+            setTimeout(() => {
+                window.location.href = '/admin/dashboard';
+            }, 1500);
+        } else {
+            showNotification(data.message || 'Giriş başarısız!', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+    }
+});
+</script>
+{% endblock %} 

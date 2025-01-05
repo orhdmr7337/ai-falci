@@ -1,0 +1,193 @@
+{
+    "kalp": {
+        "genel": [
+            "Duygusal bir dönemdesiniz",
+            "Kalbinizi dinlemenin tam zamanı",
+            "İçinizdeki sevgi büyüyor"
+        ],
+        "ask": [
+            "Aşk hayatınızda güzel gelişmeler olacak",
+            "Sevdiğiniz kişiden güzel haber alacaksınız",
+            "Romantik bir dönem sizi bekliyor"
+        ],
+        "kariyer": [
+            "İşinizi severek yapacağınız bir dönem",
+            "Tutkuyla bağlanacağınız bir proje geliyor"
+        ],
+        "saglik": [
+            "Kalp sağlığınıza dikkat etmelisiniz",
+            "Stres seviyenizi düşürmelisiniz"
+        ]
+    },
+    "kus": {
+        "genel": [
+            "Özgürlüğünüze düşkün olduğunuz bir dönem",
+            "Yeni haberler yolda",
+            "Hafiflik ve ferahlık hissedeceksiniz"
+        ],
+        "ask": [
+            "Aşkta özgürlüğünüzü koruyun",
+            "Uzaktan biri size ilgi duyuyor"
+        ],
+        "kariyer": [
+            "İş seyahati görünüyor",
+            "Yeni iş fırsatları kapıda"
+        ],
+        "saglik": [
+            "Açık havada vakit geçirin",
+            "Nefes egzersizleri size iyi gelecek"
+        ]
+    },
+    "agac": {
+        "genel": [
+            "Köklü değişimler yaklaşıyor",
+            "Ailenizle ilgili güzel gelişmeler olacak",
+            "Büyüme ve gelişme dönemindesiniz"
+        ],
+        "ask": [
+            "İlişkiniz sağlam temeller üzerine kurulu",
+            "Uzun süreli bir ilişki görünüyor"
+        ],
+        "kariyer": [
+            "Kariyerinizde yükselme var",
+            "Emeklerinizin meyvesini toplayacaksınız"
+        ],
+        "saglik": [
+            "Doğal tedavi yöntemleri size iyi gelecek",
+            "Bağışıklık sisteminiz güçlenecek"
+        ]
+    },
+    "yol": {
+        "genel": [
+            "Yeni bir yolculuğa çıkacaksınız",
+            "Hayatınızda yeni bir sayfa açılıyor",
+            "Değişim rüzgarları esiyor"
+        ],
+        "ask": [
+            "Aşk dolu bir seyahat görünüyor",
+            "Uzaktaki biriyle tanışabilirsiniz"
+        ],
+        "kariyer": [
+            "İş değişikliği olabilir",
+            "Yeni bir kariyer yolu açılıyor"
+        ],
+        "saglik": [
+            "Hareket etmek size iyi gelecek",
+            "Yeni bir spor dalı deneyebilirsiniz"
+        ]
+    },
+    "ev": {
+        "genel": [
+            "Ev hayatınızda değişiklikler olacak",
+            "Huzurlu bir dönem sizi bekliyor",
+            "Aile bağlarınız güçlenecek"
+        ],
+        "ask": [
+            "Ev hayatınızda romantizm var",
+            "Ailenizin onayını alacaksınız"
+        ],
+        "kariyer": [
+            "Evden çalışma fırsatı doğabilir",
+            "İş-yaşam dengeniz düzelecek"
+        ],
+        "saglik": [
+            "Ev ortamınızı sağlıklı hale getirin",
+            "Dinlenmeye önem verin"
+        ]
+    },
+    "mektup": {
+        "genel": [
+            "Önemli bir haber alacaksınız",
+            "İletişim kanalları açılıyor",
+            "Beklediğiniz mesaj gelecek"
+        ],
+        "ask": [
+            "Romantik bir mesaj alacaksınız",
+            "İlişkinizde iletişim güçlenecek"
+        ],
+        "kariyer": [
+            "İş teklifi alabilirsiniz",
+            "Önemli bir sözleşme imzalanacak"
+        ],
+        "saglik": [
+            "Test sonuçlarınız iyi gelecek",
+            "Sağlık kontrollerinizi ihmal etmeyin"
+        ]
+    },
+    "anahtar": {
+        "genel": [
+            "Yeni fırsatlar doğacak",
+            "Kilitli kapılar açılacak",
+            "Çözüm yolları bulacaksınız"
+        ],
+        "ask": [
+            "İlişkinizde yeni bir sayfa açılıyor",
+            "Kalbinizin kilidini açacak biri var"
+        ],
+        "kariyer": [
+            "Kariyer fırsatları kapıda",
+            "Önemli bir başarı elde edeceksiniz"
+        ],
+        "saglik": [
+            "Sağlık sorunlarınıza çözüm bulunacak",
+            "İyileşme sürecine giriyorsunuz"
+        ]
+    },
+    "cicek": {
+        "genel": [
+            "Güzel günler yaklaşıyor",
+            "Hayatınız renkleniyor",
+            "Mutlu haberler alacaksınız"
+        ],
+        "ask": [
+            "Romantik bir dönem başlıyor",
+            "İlişkiniz çiçek açacak"
+        ],
+        "kariyer": [
+            "Yaratıcı projeler sizi bekliyor",
+            "Başarılarınız takdir edilecek"
+        ],
+        "saglik": [
+            "Bahar yorgunluğuna dikkat",
+            "Doğal tedaviler size iyi gelecek"
+        ]
+    },
+    "gemi": {
+        "genel": [
+            "Uzak bir yolculuk görünüyor",
+            "Yeni ufuklara yelken açacaksınız",
+            "Büyük değişimler yaklaşıyor"
+        ],
+        "ask": [
+            "Uzaktaki biriyle tanışabilirsiniz",
+            "Aşk dolu bir seyahat sizi bekliyor"
+        ],
+        "kariyer": [
+            "Yurtdışı bağlantılı işler var",
+            "Büyük bir proje yolda"
+        ],
+        "saglik": [
+            "Deniz havası size iyi gelecek",
+            "Su sporları yapabilirsiniz"
+        ]
+    },
+    "yildiz": {
+        "genel": [
+            "Şansınız açılıyor",
+            "Dilekleriniz gerçekleşecek",
+            "Parlak bir dönem başlıyor"
+        ],
+        "ask": [
+            "Aşkta şanslı bir dönemdesiniz",
+            "Hayalinizdeki kişiyle tanışabilirsiniz"
+        ],
+        "kariyer": [
+            "Kariyerinizde yükseliş var",
+            "Başarılarınızla parlayacaksınız"
+        ],
+        "saglik": [
+            "Enerjiniz yükseliyor",
+            "Pozitif düşünceler şifa verecek"
+        ]
+    }
+} 

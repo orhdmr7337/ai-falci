@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Ana Sayfa - Falcı ZEKA{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Falcı ZEKA'ya Hoş Geldiniz</h1>
+            <p>Yapay zeka destekli modern fal deneyimi</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('coffee_fortune') }}" class="cosmic-button">
+                    <i class="fas fa-coffee"></i> Kahve Falı Bak
+                </a>
+                <a href="{{ url_for('tarot') }}" class="cosmic-button">
+                    <i class="fas fa-cards"></i> Tarot Falı Bak
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h2>Hizmetlerimiz</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-coffee"></i>
+                <h3>Kahve Falı</h3>
+                <p>Fincanınızdaki sembolleri yapay zeka teknolojisi ile yorumluyoruz.</p>
+                <a href="{{ url_for('coffee_fortune') }}" class="feature-link">Hemen Deneyin</a>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-cards"></i>
+                <h3>Tarot Falı</h3>
+                <p>Tarot kartlarının gizemli dünyasına yapay zeka rehberliğinde yolculuk.</p>
+                <a href="{{ url_for('tarot') }}" class="feature-link">Hemen Deneyin</a>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-hand"></i>
+                <h3>El Falı</h3>
+                <p>El çizgilerinizi yapay zeka teknolojisi ile analiz ediyoruz.</p>
+                <a href="{{ url_for('palm') }}" class="feature-link">Hemen Deneyin</a>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-star"></i>
+                <h3>Burç Yorumu</h3>
+                <p>Günlük, haftalık ve aylık burç yorumlarınız yapay zeka ile hazırlanıyor.</p>
+                <a href="{{ url_for('zodiac') }}" class="feature-link">Hemen Deneyin</a>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-cloud-moon"></i>
+                <h3>Rüya Yorumu</h3>
+                <p>Rüyalarınızı yapay zeka teknolojisi ile yorumluyoruz.</p>
+                <a href="{{ url_for('dream') }}" class="feature-link">Hemen Deneyin</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <h2>Nasıl Çalışır?</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Üye Olun</h3>
+                <p>Hızlıca üye olun ve fal dünyasına adım atın.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Fal Seçin</h3>
+                <p>Size en uygun fal türünü seçin.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Görüntü Yükleyin</h3>
+                <p>Kahve fincanı, el veya kart fotoğrafınızı yükleyin.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Yorumu Alın</h3>
+                <p>Yapay zeka destekli detaylı yorumunuzu hemen alın.</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hero-section {
+    text-align: center;
+    padding: 4rem 0;
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(103, 58, 183, 0.1));
+    border-radius: 15px;
+    margin-bottom: 4rem;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.cosmic-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.cosmic-button i {
+    margin-right: 0.5rem;
+}
+
+.cosmic-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+}
+
+.features-section {
+    margin-bottom: 4rem;
+}
+
+.features-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.feature-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.feature-link:hover {
+    color: var(--secondary-color);
+}
+
+.how-it-works {
+    text-align: center;
+}
+
+.how-it-works h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.step-card {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: 15px;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    margin: 0 auto 1rem;
+}
+
+.step-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.step-card p {
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        padding: 1rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .features-grid,
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %} 

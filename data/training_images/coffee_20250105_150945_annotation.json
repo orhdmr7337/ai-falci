@@ -1,0 +1,14 @@
+[
+  {
+    "type": "uzun",
+    "category": "kariyer",
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 224,
+      "height": 224
+    }
+  }
+]

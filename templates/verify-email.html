@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cosmic-container">
+    <div class="auth-card fortune-card">
+        <div class="cosmic-symbol">
+            <img src="{{ url_for('static', filename='images/cosmic-mail.svg') }}" alt="Kozmik Posta">
+        </div>
+        <h2>E-posta Doğrulama</h2>
+        <p class="cosmic-quote">✧ Kozmik yolculuğunuzu onaylayın ✧</p>
+        
+        <div class="verify-content">
+            <p>E-posta adresinize bir doğrulama bağlantısı gönderdik.</p>
+            <p>Lütfen gelen kutunuzu kontrol edin ve bağlantıya tıklayarak hesabınızı doğrulayın.</p>
+            
+            <div class="verify-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <p>E-posta kutunuzu kontrol edin</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <p>Doğrulama bağlantısına tıklayın</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <p>Hesabınızı aktifleştirin</p>
+                </div>
+            </div>
+            
+            <div class="verify-actions">
+                <button id="resend-btn" class="cosmic-button">Yeni Kod Gönder</button>
+                <p class="resend-timer">Yeni kod gönderme: <span id="timer">60</span> saniye</p>
+            </div>
+            
+            <div class="verify-help">
+                <p>E-posta almadınız mı?</p>
+                <ul>
+                    <li>Spam/gereksiz klasörünüzü kontrol edin</li>
+                    <li>E-posta adresinizi doğru yazdığınızdan emin olun</li>
+                    <li>Birkaç dakika bekleyin, e-postalar bazen geç ulaşabilir</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="auth-links">
+            <p>Sorun mu yaşıyorsunuz? <a href="/contact">Bize Ulaşın</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let timer = 60;
+const timerElement = document.getElementById('timer');
+const resendButton = document.getElementById('resend-btn');
+
+function updateTimer() {
+    timerElement.textContent = timer;
+    if (timer > 0) {
+        timer--;
+        setTimeout(updateTimer, 1000);
+    } else {
+        resendButton.disabled = false;
+        document.querySelector('.resend-timer').style.display = 'none';
+    }
+}
+
+resendButton.addEventListener('click', async () => {
+    if (timer > 0) return;
+    
+    try {
+        const response = await fetch('/api/auth/resend-verification', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            showNotification('Yeni doğrulama bağlantısı gönderildi', 'success');
+            timer = 60;
+            resendButton.disabled = true;
+            document.querySelector('.resend-timer').style.display = 'block';
+            updateTimer();
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Sayfa yüklendiğinde zamanlayıcıyı başlat
+resendButton.disabled = true;
+updateTimer();
+</script>
+{% endblock %} 

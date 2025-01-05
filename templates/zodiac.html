@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Burç Yorumu - Falcı ZEKA{% endblock %}
+
+{% block content %}
+<div class="fortune-container">
+    <h1>Burç Yorumu</h1>
+    <p class="fortune-description">Doğum tarihinizi girin, yapay zeka burç yorumunuzu hazırlasın.</p>
+
+    <div class="zodiac-section">
+        <form id="zodiacForm">
+            <div class="form-group">
+                <label for="birthdate">Doğum Tarihiniz</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+            </div>
+            <button type="submit" class="cosmic-button">
+                <i class="fas fa-magic"></i> Yorumu Göster
+            </button>
+        </form>
+    </div>
+
+    <div id="fortuneResult" class="fortune-result" style="display: none;">
+        <h2>Burç Yorumunuz</h2>
+        <div class="zodiac-info">
+            <div class="zodiac-sign">
+                <i class="fas fa-star"></i>
+                <h3 id="zodiacName"></h3>
+                <p id="zodiacDates"></p>
+            </div>
+        </div>
+        <div id="fortuneText" class="fortune-text"></div>
+    </div>
+</div>
+
+<div class="fortune-info">
+    <h2>Burç Özellikleri</h2>
+    
+    <div class="zodiac-list">
+        <div class="zodiac-item">
+            <h3>Koç (21 Mart - 20 Nisan)</h3>
+            <p>Ateş elementi - Mars yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Boğa (21 Nisan - 20 Mayıs)</h3>
+            <p>Toprak elementi - Venüs yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>İkizler (21 Mayıs - 21 Haziran)</h3>
+            <p>Hava elementi - Merkür yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Yengeç (22 Haziran - 22 Temmuz)</h3>
+            <p>Su elementi - Ay yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Aslan (23 Temmuz - 22 Ağustos)</h3>
+            <p>Ateş elementi - Güneş yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Başak (23 Ağustos - 22 Eylül)</h3>
+            <p>Toprak elementi - Merkür yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Terazi (23 Eylül - 22 Ekim)</h3>
+            <p>Hava elementi - Venüs yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Akrep (23 Ekim - 21 Kasım)</h3>
+            <p>Su elementi - Mars ve Plüton yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Yay (22 Kasım - 21 Aralık)</h3>
+            <p>Ateş elementi - Jüpiter yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Oğlak (22 Aralık - 19 Ocak)</h3>
+            <p>Toprak elementi - Satürn yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Kova (20 Ocak - 18 Şubat)</h3>
+            <p>Hava elementi - Uranüs ve Satürn yönetiminde</p>
+        </div>
+        
+        <div class="zodiac-item">
+            <h3>Balık (19 Şubat - 20 Mart)</h3>
+            <p>Su elementi - Neptün ve Jüpiter yönetiminde</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('zodiacForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const birthdate = document.getElementById('birthdate').value;
+
+    try {
+        const response = await fetch('/api/zodiac', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ birthdate: birthdate })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            document.getElementById('zodiacName').textContent = data.zodiac.name;
+            document.getElementById('zodiacDates').textContent = data.zodiac.dates;
+            document.getElementById('fortuneText').innerHTML = data.fortune;
+            document.getElementById('fortuneResult').style.display = 'block';
+        } else {
+            showNotification(data.error || 'Bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+</script>
+{% endblock %} 

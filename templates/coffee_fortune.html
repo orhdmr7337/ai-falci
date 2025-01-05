@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="fortune-container">
+    <h1>Kahve Falı</h1>
+    
+    <div class="mood-selector">
+        <h3>Şu anki ruh haliniz nasıl?</h3>
+        <div class="mood-options">
+            <label>
+                <input type="radio" name="mood" value="mutlu">
+                <span>😊 Mutlu</span>
+            </label>
+            <label>
+                <input type="radio" name="mood" value="üzgün">
+                <span>😢 Üzgün</span>
+            </label>
+            <label>
+                <input type="radio" name="mood" value="stresli">
+                <span>😰 Stresli</span>
+            </label>
+            <label>
+                <input type="radio" name="mood" value="heyecanlı">
+                <span>🤩 Heyecanlı</span>
+            </label>
+            <label>
+                <input type="radio" name="mood" value="yorgun">
+                <span>😴 Yorgun</span>
+            </label>
+        </div>
+    </div>
+    
+    <div class="upload-container">
+        <form id="fortuneForm" enctype="multipart/form-data">
+            <div class="file-upload">
+                <input type="file" id="imageInput" name="image" accept="image/*" required>
+                <label for="imageInput">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Fotoğraf Seç veya Sürükle</span>
+                </label>
+            </div>
+            
+            <div id="imagePreview" class="image-preview" style="display: none;">
+                <img id="previewImg" src="" alt="Fotoğraf önizleme">
+                <button type="button" id="removeImage" class="btn btn-danger">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <button type="submit" id="submitBtn" class="btn btn-primary" disabled>
+                <i class="fas fa-magic"></i> Falıma Bak
+            </button>
+        </form>
+    </div>
+    
+    <div id="loadingSpinner" class="spinner" style="display: none;">
+        <i class="fas fa-coffee fa-spin"></i>
+        <span>Falınız yorumlanıyor...</span>
+    </div>
+    
+    <div id="result" class="result-container" style="display: none;">
+        <h2>Falınız</h2>
+        <div id="fortuneText" class="fortune-text"></div>
+        
+        <div class="action-buttons">
+            <button id="saveReading" class="btn btn-success">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <button id="shareReading" class="btn btn-primary">
+                <i class="fas fa-share-alt"></i> Paylaş
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('fortuneForm');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const removeImage = document.getElementById('removeImage');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const result = document.getElementById('result');
+    const fortuneText = document.getElementById('fortuneText');
+    
+    // Dosya seçimi veya sürükleme
+    imageInput.addEventListener('change', handleImageSelect);
+    
+    const dropZone = document.querySelector('.file-upload');
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            imageInput.files = files;
+            handleImageSelect();
+        }
+    });
+    
+    // Fotoğraf kaldırma
+    removeImage.addEventListener('click', () => {
+        imageInput.value = '';
+        imagePreview.style.display = 'none';
+        submitBtn.disabled = true;
+    });
+    
+    // Form gönderimi
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Ruh hali kontrolü
+        const selectedMood = document.querySelector('input[name="mood"]:checked');
+        if (!selectedMood) {
+            alert('Lütfen ruh halinizi seçin');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('image', imageInput.files[0]);
+        formData.append('mood', selectedMood.value);
+        
+        loadingSpinner.style.display = 'flex';
+        result.style.display = 'none';
+        
+        try {
+            // Önce görüntü doğrulama
+            const validateResponse = await fetch('/api/validate-coffee-image', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const validateData = await validateResponse.json();
+            
+            if (!validateData.isValidCoffeeImage) {
+                alert(validateData.message);
+                loadingSpinner.style.display = 'none';
+                return;
+            }
+            
+            // Fal analizi
+            const response = await fetch('/api/coffee-fortune', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Sonucu göster
+            fortuneText.innerHTML = formatFortune(data.fortune);
+            result.style.display = 'block';
+            
+        } catch (error) {
+            alert(error.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+        } finally {
+            loadingSpinner.style.display = 'none';
+        }
+    });
+    
+    function handleImageSelect() {
+        const file = imageInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                imagePreview.style.display = 'block';
+                submitBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function formatFortune(fortune) {
+        return fortune.split('\n').map(line => `<p>${line}</p>`).join('');
+    }
+});
+</script>
+
+<style>
+.fortune-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.mood-selector {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.mood-options {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.mood-options label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mood-options label:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.mood-options input[type="radio"] {
+    display: none;
+}
+
+.mood-options input[type="radio"]:checked + span {
+    font-weight: bold;
+}
+
+.file-upload {
+    border: 2px dashed var(--primary-color);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload.dragover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-style: solid;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.image-preview {
+    position: relative;
+    margin: 1rem 0;
+}
+
+.image-preview img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.image-preview button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.result-container {
+    margin-top: 2rem;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--bg-secondary);
+}
+
+.fortune-text {
+    margin: 1rem 0;
+    line-height: 1.6;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .fortune-container {
+        padding: 1rem;
+    }
+    
+    .mood-options {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %} 

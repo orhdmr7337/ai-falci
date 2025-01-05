@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}El Falı - Falcı ZEKA{% endblock %}
+
+{% block content %}
+<div class="fortune-container">
+    <h1>El Falı</h1>
+    <p class="fortune-description">El fotoğrafınızı yükleyin, yapay zeka el çizgilerinizi analiz etsin.</p>
+
+    <div class="upload-section">
+        <form id="palmForm" enctype="multipart/form-data">
+            <div class="file-upload">
+                <label for="palmImage">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>El Fotoğrafı Yükle</span>
+                </label>
+                <input type="file" id="palmImage" name="palmImage" accept="image/*" required>
+            </div>
+            <div id="imagePreview" class="image-preview"></div>
+            <button type="submit" class="cosmic-button">
+                <i class="fas fa-magic"></i> Falımı Bak
+            </button>
+        </form>
+    </div>
+
+    <div id="fortuneResult" class="fortune-result" style="display: none;">
+        <h2>El Falınız</h2>
+        <div id="fortuneText" class="fortune-text"></div>
+    </div>
+</div>
+
+<div class="fortune-info">
+    <h2>El Falı Hakkında</h2>
+    <p>El falı, avuç içindeki çizgilerin ve şekillerin yorumlanması ile kişinin karakteri, geçmişi ve geleceği hakkında bilgi edinme sanatıdır. Yapay zeka teknolojimiz, el çizgilerinizi analiz ederek size özel yorumlar sunar.</p>
+    
+    <div class="palm-lines-info">
+        <h3>Temel El Çizgileri</h3>
+        <ul>
+            <li><strong>Kalp Çizgisi:</strong> Duygusal yaşam ve ilişkiler</li>
+            <li><strong>Kafa Çizgisi:</strong> Düşünce yapısı ve zihinsel özellikler</li>
+            <li><strong>Yaşam Çizgisi:</strong> Fiziksel sağlık ve yaşam enerjisi</li>
+            <li><strong>Kader Çizgisi:</strong> Kariyer ve yaşam yolu</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('palmForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    const fileInput = document.getElementById('palmImage');
+    formData.append('image', fileInput.files[0]);
+
+    try {
+        const response = await fetch('/api/palm-reading', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            document.getElementById('fortuneText').innerHTML = data.fortune;
+            document.getElementById('fortuneResult').style.display = 'block';
+        } else {
+            showNotification(data.error || 'Bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+
+// Resim önizleme
+document.getElementById('palmImage').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    const file = e.target.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="El önizleme">`;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %} 

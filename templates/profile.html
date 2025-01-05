@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cosmic-container">
+    <div class="profile-header fortune-card">
+        <div class="profile-avatar">
+            <div class="profile-symbol">{{ user.username[0].upper() }}</div>
+        </div>
+        <h2>{{ user.username }}</h2>
+        <p class="cosmic-quote">✧ Hoş geldiniz ✧</p>
+        
+        <div class="profile-status">
+            {% if user.is_premium %}
+            <span class="status premium">Premium Üye</span>
+            <p class="premium-expiry">Premium üyeliğiniz {{ user.premium_expiry.strftime('%d.%m.%Y') }} tarihinde sona erecek</p>
+            {% else %}
+            <span class="status free">Ücretsiz Üye</span>
+            <button class="cosmic-button" onclick="upgradeToPremium()">Premium'a Yükselt</button>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="profile-grid">
+        <div class="profile-card fortune-card">
+            <h3>Günlük Fal Limitleri</h3>
+            <div class="limits-grid">
+                <div class="limit-item">
+                    <div class="limit-icon">☕</div>
+                    <div class="limit-label">Kahve Falı</div>
+                    <div class="limit-value">{{ user.limits.coffee.used }}/{{ user.limits.coffee.total }}</div>
+                </div>
+                
+                <div class="limit-item">
+                    <div class="limit-icon">🎴</div>
+                    <div class="limit-label">Tarot</div>
+                    <div class="limit-value">{{ user.limits.tarot.used }}/{{ user.limits.tarot.total }}</div>
+                </div>
+                
+                <div class="limit-item">
+                    <div class="limit-icon">✋</div>
+                    <div class="limit-label">El Falı</div>
+                    <div class="limit-value">{{ user.limits.palm.used }}/{{ user.limits.palm.total }}</div>
+                </div>
+                
+                <div class="limit-item">
+                    <div class="limit-icon">⭐</div>
+                    <div class="limit-label">Burç Yorumu</div>
+                    <div class="limit-value">{{ user.limits.zodiac.used }}/{{ user.limits.zodiac.total }}</div>
+                </div>
+                
+                <div class="limit-item">
+                    <div class="limit-icon">💭</div>
+                    <div class="limit-label">Rüya Tabiri</div>
+                    <div class="limit-value">{{ user.limits.dream.used }}/{{ user.limits.dream.total }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-card fortune-card">
+            <h3>Son Fallarım</h3>
+            <div class="readings-list">
+                {% if user.readings %}
+                {% for reading in user.readings[-5:] %}
+                <div class="reading-item">
+                    <div class="reading-type">
+                        {% if reading.type == 'coffee' %}☕
+                        {% elif reading.type == 'tarot' %}🎴
+                        {% elif reading.type == 'palm' %}✋
+                        {% elif reading.type == 'zodiac' %}⭐
+                        {% elif reading.type == 'dream' %}💭
+                        {% endif %}
+                        {{ reading.type|title }}
+                    </div>
+                    <div class="reading-date">{{ reading.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+                    <button class="cosmic-button small" onclick="viewReading('{{ reading.id }}')">Görüntüle</button>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="no-readings">Henüz fal baktırmamışsınız</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if user.is_premium %}
+        <div class="profile-card fortune-card">
+            <h3>Premium Özellikler</h3>
+            <div class="premium-features">
+                <div class="feature-item">
+                    <div class="feature-icon">🌟</div>
+                    <div class="feature-label">Sınırsız Fal Hakkı</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-label">Detaylı Yorumlar</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-label">Öncelikli Destek</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎁</div>
+                    <div class="feature-label">Özel İçerikler</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="profile-card fortune-card">
+            <h3>Hesap Ayarları</h3>
+            <form class="settings-form" id="profile-settings-form">
+                <div class="form-group">
+                    <label for="email">E-posta</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Yeni Şifre</label>
+                    <input type="password" id="password" name="password" placeholder="Değiştirmek için yeni şifre girin">
+                </div>
+                
+                <div class="form-group">
+                    <label for="notifications">Bildirimler</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="notifications[email]" {% if user.notifications.email %}checked{% endif %}>
+                            E-posta bildirimleri
+                        </label>
+                        
+                        <label>
+                            <input type="checkbox" name="notifications[daily]" {% if user.notifications.daily %}checked{% endif %}>
+                            Günlük burç yorumları
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="cosmic-button">Ayarları Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function upgradeToPremium() {
+    try {
+        const response = await fetch('/api/upgrade-premium', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            window.location.href = '/payment';
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Premium üyelik yükseltme işlemi başarısız oldu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+}
+
+async function viewReading(readingId) {
+    window.location.href = `/readings/${readingId}`;
+}
+
+document.getElementById('profile-settings-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+        const response = await fetch('/api/profile/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            showNotification('Ayarlar başarıyla güncellendi', 'success');
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Ayarlar güncellenirken bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %} 

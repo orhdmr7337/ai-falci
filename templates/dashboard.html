@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cosmic-container">
+    <div class="dashboard-header fortune-card">
+        <div class="profile-avatar">
+            {% if user.profile.zodiac_sign %}
+            <div class="zodiac-symbol">{{ user.profile.zodiac_sign }}</div>
+            {% else %}
+            <div class="zodiac-symbol">✨</div>
+            {% endif %}
+        </div>
+        <h2>Hoş Geldin, {{ user.username }}</h2>
+        <p class="cosmic-quote">✧ Günlük fal haklarınız yenilendi ✧</p>
+        
+        {% if not user.is_premium %}
+        <div class="premium-alert">
+            <div class="alert-icon">⭐</div>
+            <div class="alert-content">
+                <h4>Premium'a Geç</h4>
+                <p>Sınırsız fal hakkı ve özel özelliklere erişim kazanın!</p>
+                <a href="/premium" class="cosmic-button">Premium'a Geç</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card fortune-card">
+            <h3>Günlük Fal Haklarınız</h3>
+            <div class="readings-grid">
+                <div class="reading-stat">
+                    <div class="reading-icon">☕</div>
+                    <h4>Kahve Falı</h4>
+                    <div class="reading-count">{{ user.get_remaining_readings().coffee if not user.is_premium else "∞" }}</div>
+                </div>
+                
+                <div class="reading-stat">
+                    <div class="reading-icon">🎴</div>
+                    <h4>Tarot</h4>
+                    <div class="reading-count">{{ user.get_remaining_readings().tarot if not user.is_premium else "∞" }}</div>
+                </div>
+                
+                <div class="reading-stat">
+                    <div class="reading-icon">✋</div>
+                    <h4>El Falı</h4>
+                    <div class="reading-count">{{ user.get_remaining_readings().palm if not user.is_premium else "∞" }}</div>
+                </div>
+                
+                <div class="reading-stat">
+                    <div class="reading-icon">⭐</div>
+                    <h4>Burç Yorumu</h4>
+                    <div class="reading-count">{{ user.get_remaining_readings().zodiac if not user.is_premium else "∞" }}</div>
+                </div>
+                
+                <div class="reading-stat">
+                    <div class="reading-icon">💭</div>
+                    <h4>Rüya Tabiri</h4>
+                    <div class="reading-count">{{ user.get_remaining_readings().dream if not user.is_premium else "∞" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-card fortune-card">
+            <h3>Son Fallarınız</h3>
+            <div class="readings-history">
+                {% if user.readings_history %}
+                    {% for reading in user.readings_history[-5:] %}
+                    <div class="history-item">
+                        <div class="reading-type">{{ reading.type }}</div>
+                        <div class="reading-date">{{ reading.date.strftime('%d.%m.%Y %H:%M') }}</div>
+                        <a href="#" class="cosmic-button small">Detaylar</a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-history">
+                        <p>Henüz fal baktırmamışsınız</p>
+                        <a href="/coffee-fortune" class="cosmic-button">İlk Falınızı Bakın</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="dashboard-card fortune-card">
+            <h3>Profil Bilgileri</h3>
+            <form class="profile-form" id="profile-form">
+                <div class="form-group">
+                    <label for="birth_date">Doğum Tarihi</label>
+                    <input type="date" id="birth_date" name="birth_date" value="{{ user.profile.birth_date or '' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="zodiac_sign">Burç</label>
+                    <select id="zodiac_sign" name="zodiac_sign">
+                        <option value="">Seçiniz</option>
+                        <option value="♈" {% if user.profile.zodiac_sign == "♈" %}selected{% endif %}>Koç</option>
+                        <option value="♉" {% if user.profile.zodiac_sign == "♉" %}selected{% endif %}>Boğa</option>
+                        <option value="♊" {% if user.profile.zodiac_sign == "♊" %}selected{% endif %}>İkizler</option>
+                        <option value="♋" {% if user.profile.zodiac_sign == "♋" %}selected{% endif %}>Yengeç</option>
+                        <option value="♌" {% if user.profile.zodiac_sign == "♌" %}selected{% endif %}>Aslan</option>
+                        <option value="♍" {% if user.profile.zodiac_sign == "♍" %}selected{% endif %}>Başak</option>
+                        <option value="♎" {% if user.profile.zodiac_sign == "♎" %}selected{% endif %}>Terazi</option>
+                        <option value="♏" {% if user.profile.zodiac_sign == "♏" %}selected{% endif %}>Akrep</option>
+                        <option value="♐" {% if user.profile.zodiac_sign == "♐" %}selected{% endif %}>Yay</option>
+                        <option value="♑" {% if user.profile.zodiac_sign == "♑" %}selected{% endif %}>Oğlak</option>
+                        <option value="♒" {% if user.profile.zodiac_sign == "♒" %}selected{% endif %}>Kova</option>
+                        <option value="♓" {% if user.profile.zodiac_sign == "♓" %}selected{% endif %}>Balık</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="favorite_reading">Favori Fal Türü</label>
+                    <select id="favorite_reading" name="favorite_reading">
+                        <option value="">Seçiniz</option>
+                        <option value="coffee" {% if user.profile.favorite_reading == "coffee" %}selected{% endif %}>Kahve Falı</option>
+                        <option value="tarot" {% if user.profile.favorite_reading == "tarot" %}selected{% endif %}>Tarot</option>
+                        <option value="palm" {% if user.profile.favorite_reading == "palm" %}selected{% endif %}>El Falı</option>
+                        <option value="zodiac" {% if user.profile.favorite_reading == "zodiac" %}selected{% endif %}>Burç Yorumu</option>
+                        <option value="dream" {% if user.profile.favorite_reading == "dream" %}selected{% endif %}>Rüya Tabiri</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="cosmic-button">Profili Güncelle</button>
+            </form>
+        </div>
+        
+        {% if user.is_premium %}
+        <div class="dashboard-card fortune-card premium-status">
+            <h3>Premium Üyelik</h3>
+            <div class="premium-info">
+                <div class="premium-icon">👑</div>
+                <div class="premium-details">
+                    <p>Premium üyeliğiniz: <strong>{{ user.premium_until.strftime('%d.%m.%Y') }}</strong> tarihine kadar aktif</p>
+                    <a href="/premium" class="cosmic-button">Üyeliği Uzat</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+        const response = await fetch('/api/profile/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            showNotification('Profil başarıyla güncellendi', 'success');
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Profil güncellenirken bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %} 

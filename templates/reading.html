@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cosmic-container">
+    <div class="reading-header fortune-card">
+        <div class="reading-type-icon">
+            {% if reading.type == 'coffee' %}☕
+            {% elif reading.type == 'tarot' %}🎴
+            {% elif reading.type == 'palm' %}✋
+            {% elif reading.type == 'zodiac' %}⭐
+            {% elif reading.type == 'dream' %}💭
+            {% endif %}
+        </div>
+        <h2>{{ reading.type|title }} Falı</h2>
+        <p class="cosmic-quote">✧ {{ reading.created_at.strftime('%d.%m.%Y %H:%M') }} ✧</p>
+    </div>
+    
+    <div class="reading-content fortune-card">
+        {% if reading.type == 'coffee' %}
+        <div class="coffee-reading">
+            <div class="coffee-images">
+                {% if reading.images %}
+                {% for image in reading.images %}
+                <div class="coffee-image">
+                    <img src="{{ image }}" alt="Kahve fincanı görüntüsü">
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="reading-sections">
+                {% for section in reading.interpretation %}
+                <div class="reading-section">
+                    <h3>{{ section.title }}</h3>
+                    <p>{{ section.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% elif reading.type == 'tarot' %}
+        <div class="tarot-reading">
+            <div class="tarot-cards">
+                {% for card in reading.cards %}
+                <div class="tarot-card">
+                    <div class="card-image">
+                        <img src="{{ card.image }}" alt="{{ card.name }}">
+                    </div>
+                    <div class="card-info">
+                        <h3>{{ card.name }}</h3>
+                        <p class="card-position">{{ card.position }}</p>
+                        <p class="card-meaning">{{ card.meaning }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="reading-summary">
+                <h3>Genel Yorum</h3>
+                <p>{{ reading.summary }}</p>
+            </div>
+        </div>
+        
+        {% elif reading.type == 'palm' %}
+        <div class="palm-reading">
+            <div class="palm-image">
+                <img src="{{ reading.image }}" alt="El falı görüntüsü">
+            </div>
+            
+            <div class="reading-sections">
+                {% for line in reading.lines %}
+                <div class="reading-section">
+                    <h3>{{ line.name }}</h3>
+                    <p>{{ line.interpretation }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        {% elif reading.type == 'zodiac' %}
+        <div class="zodiac-reading">
+            <div class="zodiac-sign">
+                <div class="sign-symbol">{{ reading.sign_symbol }}</div>
+                <h3>{{ reading.sign }}</h3>
+            </div>
+            
+            <div class="reading-sections">
+                <div class="reading-section">
+                    <h3>Günlük</h3>
+                    <p>{{ reading.daily }}</p>
+                </div>
+                
+                <div class="reading-section">
+                    <h3>Aşk</h3>
+                    <p>{{ reading.love }}</p>
+                </div>
+                
+                <div class="reading-section">
+                    <h3>Kariyer</h3>
+                    <p>{{ reading.career }}</p>
+                </div>
+                
+                <div class="reading-section">
+                    <h3>Sağlık</h3>
+                    <p>{{ reading.health }}</p>
+                </div>
+            </div>
+        </div>
+        
+        {% elif reading.type == 'dream' %}
+        <div class="dream-reading">
+            <div class="dream-content">
+                <h3>Rüya</h3>
+                <p class="dream-text">{{ reading.dream_text }}</p>
+            </div>
+            
+            <div class="reading-sections">
+                {% for symbol in reading.symbols %}
+                <div class="reading-section">
+                    <h3>{{ symbol.name }}</h3>
+                    <p>{{ symbol.meaning }}</p>
+                </div>
+                {% endfor %}
+                
+                <div class="reading-section">
+                    <h3>Genel Yorum</h3>
+                    <p>{{ reading.interpretation }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="reading-actions">
+        <button class="cosmic-button" onclick="window.print()">Yazdır</button>
+        <button class="cosmic-button" onclick="shareReading()">Paylaş</button>
+        <button class="cosmic-button" onclick="window.history.back()">Geri Dön</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function shareReading() {
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ reading.type|title }} Falı',
+            text: 'AI Falcı\'dan aldığım fala göz atmak ister misin?',
+            url: window.location.href
+        })
+        .then(() => console.log('Başarıyla paylaşıldı'))
+        .catch((error) => console.log('Paylaşma hatası:', error));
+    } else {
+        // Paylaşım API'si desteklenmiyorsa URL'i panoya kopyala
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => showNotification('Fal bağlantısı panoya kopyalandı', 'success'))
+            .catch(() => showNotification('Bağlantı kopyalanamadı', 'error'));
+    }
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %} 

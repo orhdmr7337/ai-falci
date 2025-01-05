@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Rüya Yorumu - Falcı ZEKA{% endblock %}
+
+{% block content %}
+<div class="fortune-container">
+    <h1>Rüya Tabiri</h1>
+    <p class="fortune-description">Rüyanızı detaylı bir şekilde anlatın, yapay zeka sizin için yorumlasın.</p>
+
+    <div class="dream-section">
+        <form id="dreamForm">
+            <div class="form-group">
+                <label for="dream">Rüyanızı Anlatın</label>
+                <textarea id="dream" name="dream" rows="5" placeholder="Rüyanızı hatırladığınız tüm detaylarıyla yazın..." required></textarea>
+            </div>
+            <button type="submit" class="cosmic-button">
+                <i class="fas fa-magic"></i> Rüyamı Yorumla
+            </button>
+        </form>
+    </div>
+
+    <div id="fortuneResult" class="fortune-result" style="display: none;">
+        <h2>Rüya Yorumunuz</h2>
+        <div id="fortuneText" class="fortune-text"></div>
+    </div>
+</div>
+
+<div class="fortune-info">
+    <h2>Rüya Tabiri Hakkında</h2>
+    <p>Rüyalar, bilinçaltımızın bizimle iletişim kurma yoludur. Her sembol ve detay, hayatımızda yaşadığımız olayların ve duygularımızın yansımasıdır.</p>
+    
+    <div class="dream-symbols">
+        <h3>Sık Görülen Rüya Sembolleri</h3>
+        
+        <div class="symbol-item">
+            <h4>Ev</h4>
+            <p>İç dünyamızı ve ailemizi temsil eder</p>
+        </div>
+        
+        <div class="symbol-item">
+            <h4>Araba</h4>
+            <p>Hayattaki yönümüzü ve kontrolü simgeler</p>
+        </div>
+        
+        <div class="symbol-item">
+            <h4>Uçmak</h4>
+            <p>Özgürlük ve başarı arzusunu gösterir</p>
+        </div>
+        
+        <div class="symbol-item">
+            <h4>Su</h4>
+            <p>Duygusal durumumuzu yansıtır</p>
+        </div>
+        
+        <div class="symbol-item">
+            <h4>Ağaç</h4>
+            <p>Büyüme ve gelişimi temsil eder</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('dreamForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const dream = document.getElementById('dream').value;
+
+    try {
+        const response = await fetch('/api/dream', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ dream: dream })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            document.getElementById('fortuneText').innerHTML = data.fortune;
+            document.getElementById('fortuneResult').style.display = 'block';
+        } else {
+            showNotification(data.error || 'Bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+</script>
+{% endblock %} 

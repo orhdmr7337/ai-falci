@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Tarot Falı - Falcı ZEKA{% endblock %}
+
+{% block content %}
+<div class="fortune-container">
+    <h1>Tarot Falı</h1>
+    <p class="fortune-description">Merak ettiğiniz konuyu yazın, yapay zeka sizin için tarot kartlarını yorumlasın.</p>
+
+    <div class="tarot-section">
+        <form id="tarotForm">
+            <div class="form-group">
+                <label for="question">Sorunuz</label>
+                <input type="text" id="question" name="question" placeholder="Merak ettiğiniz konuyu yazın..." required>
+            </div>
+            <button type="submit" class="cosmic-button">
+                <i class="fas fa-magic"></i> Kart Aç
+            </button>
+        </form>
+    </div>
+
+    <div id="fortuneResult" class="fortune-result" style="display: none;">
+        <h2>Tarot Yorumunuz</h2>
+        <div class="cards-display">
+            <div class="card past">
+                <div class="card-image"></div>
+                <h3>Geçmiş</h3>
+                <p class="card-name"></p>
+            </div>
+            <div class="card present">
+                <div class="card-image"></div>
+                <h3>Şimdi</h3>
+                <p class="card-name"></p>
+            </div>
+            <div class="card future">
+                <div class="card-image"></div>
+                <h3>Gelecek</h3>
+                <p class="card-name"></p>
+            </div>
+        </div>
+        <div id="fortuneText" class="fortune-text"></div>
+    </div>
+</div>
+
+<div class="fortune-info">
+    <h2>Tarot Kartları Hakkında</h2>
+    <p>Tarot kartları, yüzyıllardır insanların geleceği yorumlamak ve içsel rehberlik almak için kullandığı mistik bir araçtır. Her kart, yaşamın farklı yönlerini ve enerjilerini temsil eder.</p>
+    
+    <div class="tarot-info">
+        <h3>Major Arkana</h3>
+        <p>22 karttan oluşan Major Arkana, yaşamın büyük derslerini ve dönüm noktalarını temsil eder. Fool (Deli), Magician (Sihirbaz), High Priestess (Baş Rahibe) gibi güçlü sembolik kartları içerir.</p>
+        
+        <h3>Minor Arkana</h3>
+        <p>56 karttan oluşan Minor Arkana, günlük yaşamın detaylarını ve geçici durumları temsil eder. Dört suit'e ayrılır: Asalar (Ateş), Kupalar (Su), Kılıçlar (Hava) ve Pentakller (Toprak).</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('tarotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const question = document.getElementById('question').value;
+
+    try {
+        const response = await fetch('/api/tarot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ question: question })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Kartları göster
+            document.querySelectorAll('.card').forEach((card, index) => {
+                card.querySelector('.card-image').style.backgroundImage = `url(${data.cards[index].image})`;
+                card.querySelector('.card-name').textContent = data.cards[index].name;
+            });
+            
+            document.getElementById('fortuneText').innerHTML = data.fortune;
+            document.getElementById('fortuneResult').style.display = 'block';
+        } else {
+            showNotification(data.error || 'Bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+</script>
+{% endblock %} 

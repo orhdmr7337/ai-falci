@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Kahve Falı{% endblock %}
+
+{% block content %}
+<div class="cosmic-container">
+    <div class="fortune-card">
+        <h2>Kahve Falı</h2>
+        <p class="cosmic-quote">✧ Fincanınızdaki sırları keşfedin ✧</p>
+        
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+        
+        {% if fortune %}
+        <div class="fortune-result">
+            <h3>Falınız</h3>
+            <p>{{ fortune }}</p>
+        </div>
+        {% else %}
+        <form action="/coffee-fortune" method="post" enctype="multipart/form-data" class="fortune-form">
+            <div class="form-group">
+                <label for="image">Fincan Fotoğrafı</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <p class="form-hint">Fincanınızın net bir fotoğrafını yükleyin</p>
+            </div>
+            
+            <button type="submit" class="cosmic-button">Falımı Gör</button>
+        </form>
+        
+        <div class="instructions">
+            <h3>Nasıl Fal Baktırırım?</h3>
+            <ol>
+                <li>Türk kahvenizi içtikten sonra fincanı ters çevirin</li>
+                <li>5 dakika bekleyin</li>
+                <li>Fincanı düz çevirin</li>
+                <li>Net bir fotoğraf çekin</li>
+                <li>Fotoğrafı yükleyin ve falınızı öğrenin</li>
+            </ol>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Falcı ZEKA{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="cosmic-nav">
+        <div class="nav-logo">
+            <a href="{{ url_for('index') }}">
+                <i class="fas fa-moon"></i>
+                <span>Falcı ZEKA</span>
+            </a>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-item">
+                <i class="fas fa-home"></i>
+                Ana Sayfa
+            </a>
+            <a href="{{ url_for('coffee_fortune') }}" class="nav-item">
+                <i class="fas fa-coffee"></i>
+                Kahve Falı
+            </a>
+            <a href="{{ url_for('tarot') }}" class="nav-item">
+                <i class="fas fa-cards"></i>
+                Tarot Falı
+            </a>
+            <a href="{{ url_for('palm') }}" class="nav-item">
+                <i class="fas fa-hand"></i>
+                El Falı
+            </a>
+            <a href="{{ url_for('zodiac') }}" class="nav-item">
+                <i class="fas fa-star"></i>
+                Burç Yorumu
+            </a>
+            <a href="{{ url_for('dream') }}" class="nav-item">
+                <i class="fas fa-cloud-moon"></i>
+                Rüya Yorumu
+            </a>
+        </div>
+
+        <div class="nav-auth">
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_panel') }}" class="nav-item admin-link">
+                        <i class="fas fa-user-shield"></i>
+                        Admin Panel
+                    </a>
+                {% endif %}
+                <a href="{{ url_for('profile') }}" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    Profilim
+                </a>
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Çıkış
+                </a>
+            {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-item login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Giriş
+                </a>
+                <a href="{{ url_for('register_page') }}" class="nav-item register-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Kayıt Ol
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="cosmic-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Hakkımızda</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> Biz Kimiz</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> İletişim</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> Gizlilik Politikası</a></li>
+                    <li><a href="#"><i class="fas fa-file-contract"></i> Kullanım Şartları</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Fallar</h4>
+                <ul>
+                    <li><a href="{{ url_for('coffee_fortune') }}"><i class="fas fa-coffee"></i> Kahve Falı</a></li>
+                    <li><a href="{{ url_for('tarot') }}"><i class="fas fa-cards"></i> Tarot Falı</a></li>
+                    <li><a href="{{ url_for('palm') }}"><i class="fas fa-hand"></i> El Falı</a></li>
+                    <li><a href="{{ url_for('zodiac') }}"><i class="fas fa-star"></i> Burç Yorumu</a></li>
+                    <li><a href="{{ url_for('dream') }}"><i class="fas fa-cloud-moon"></i> Rüya Yorumu</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Sosyal Medya</h4>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Falcı ZEKA. Tüm hakları saklıdır.</p>
+            <div class="footer-links">
+                <a href="#">Gizlilik</a>
+                <a href="#">Şartlar</a>
+                <a href="#">SSS</a>
+                <a href="#">İletişim</a>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+    <script>
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    showNotification('{{ message }}', '{{ category }}');
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+</body>
+</html> 

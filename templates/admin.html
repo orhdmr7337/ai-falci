@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cosmic-container">
+    <div class="admin-header fortune-card">
+        <div class="admin-avatar">
+            <div class="admin-symbol">👑</div>
+        </div>
+        <h2>Admin Paneli</h2>
+        <p class="cosmic-quote">✧ Sistem yönetimi ve istatistikler ✧</p>
+    </div>
+    
+    <div class="admin-grid">
+        <div class="admin-card fortune-card">
+            <h3>Sistem İstatistikleri</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value">{{ stats.total_users }}</div>
+                    <div class="stat-label">Toplam Kullanıcı</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">{{ stats.premium_users }}</div>
+                    <div class="stat-label">Premium Üye</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">{{ stats.total_readings }}</div>
+                    <div class="stat-label">Toplam Fal</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value">{{ stats.monthly_revenue }}₺</div>
+                    <div class="stat-label">Aylık Gelir</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-card fortune-card">
+            <h3>Son Kullanıcılar</h3>
+            <div class="users-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı</th>
+                            <th>E-posta</th>
+                            <th>Durum</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recent_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_premium %}
+                                <span class="status premium">Premium</span>
+                                {% else %}
+                                <span class="status free">Ücretsiz</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at.strftime('%d.%m.%Y') }}</td>
+                            <td>
+                                <button class="cosmic-button small" onclick="viewUser('{{ user.id }}')">Detay</button>
+                                <button class="cosmic-button small danger" onclick="deleteUser('{{ user.id }}')">Sil</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="admin-card fortune-card">
+            <h3>Fal İstatistikleri</h3>
+            <div class="readings-chart">
+                <canvas id="readingsChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="admin-card fortune-card">
+            <h3>Sistem Ayarları</h3>
+            <form class="settings-form" id="settings-form">
+                <div class="form-group">
+                    <label>Ücretsiz Fal Limitleri</label>
+                    <div class="limits-grid">
+                        <div class="limit-input">
+                            <label for="coffee_limit">Kahve Falı</label>
+                            <input type="number" id="coffee_limit" name="limits[coffee]" value="{{ settings.limits.coffee }}">
+                        </div>
+                        
+                        <div class="limit-input">
+                            <label for="tarot_limit">Tarot</label>
+                            <input type="number" id="tarot_limit" name="limits[tarot]" value="{{ settings.limits.tarot }}">
+                        </div>
+                        
+                        <div class="limit-input">
+                            <label for="palm_limit">El Falı</label>
+                            <input type="number" id="palm_limit" name="limits[palm]" value="{{ settings.limits.palm }}">
+                        </div>
+                        
+                        <div class="limit-input">
+                            <label for="zodiac_limit">Burç Yorumu</label>
+                            <input type="number" id="zodiac_limit" name="limits[zodiac]" value="{{ settings.limits.zodiac }}">
+                        </div>
+                        
+                        <div class="limit-input">
+                            <label for="dream_limit">Rüya Tabiri</label>
+                            <input type="number" id="dream_limit" name="limits[dream]" value="{{ settings.limits.dream }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Premium Fiyatlandırma</label>
+                    <div class="pricing-grid">
+                        <div class="price-input">
+                            <label for="monthly_price">Aylık Üyelik (₺)</label>
+                            <input type="number" id="monthly_price" name="pricing[monthly]" value="{{ settings.pricing.monthly }}">
+                        </div>
+                        
+                        <div class="price-input">
+                            <label for="yearly_price">Yıllık Üyelik (₺)</label>
+                            <input type="number" id="yearly_price" name="pricing[yearly]" value="{{ settings.pricing.yearly }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="cosmic-button">Ayarları Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Fal istatistikleri grafiği
+const ctx = document.getElementById('readingsChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_data.labels | tojson }},
+        datasets: [{
+            label: 'Günlük Fal Sayısı',
+            data: {{ chart_data.values | tojson }},
+            borderColor: '#C77DFF',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        }
+    }
+});
+
+// Ayarları kaydet
+document.getElementById('settings-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+        const response = await fetch('/api/admin/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            showNotification('Ayarlar başarıyla güncellendi', 'success');
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Ayarlar güncellenirken bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+});
+
+// Kullanıcı işlemleri
+function viewUser(userId) {
+    window.location.href = `/admin/users/${userId}`;
+}
+
+async function deleteUser(userId) {
+    if (!confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/admin/users/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            showNotification('Kullanıcı başarıyla silindi', 'success');
+            setTimeout(() => window.location.reload(), 1500);
+        } else {
+            const error = await response.json();
+            showNotification(error.error || 'Kullanıcı silinirken bir hata oluştu', 'error');
+        }
+    } catch (error) {
+        showNotification('Bir hata oluştu', 'error');
+    }
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,105 @@
+{
+    "major_arcana": [
+        {
+            "name": "Fool",
+            "turkish_name": "Deli",
+            "number": 0,
+            "meaning_upright": "Yeni başlangıçlar, macera, spontanlık, özgürlük",
+            "meaning_reversed": "Düşüncesizlik, risk alma, naiflik",
+            "description": "Yeni bir yolculuğun başlangıcını temsil eder. Özgür ruh ve saf potansiyeli simgeler.",
+            "keywords": ["başlangıç", "özgürlük", "macera", "spontanlık", "saflık"]
+        },
+        {
+            "name": "Magician",
+            "turkish_name": "Sihirbaz",
+            "number": 1,
+            "meaning_upright": "Yaratıcılık, beceri, irade gücü, konsantrasyon",
+            "meaning_reversed": "Manipülasyon, yeteneklerin kötüye kullanımı",
+            "description": "Güç ve potansiyeli temsil eder. Tüm elementleri kontrol etme yeteneğini simgeler.",
+            "keywords": ["güç", "yetenek", "irade", "yaratıcılık", "başarı"]
+        },
+        {
+            "name": "High Priestess",
+            "turkish_name": "Baş Rahibe",
+            "number": 2,
+            "meaning_upright": "Sezgi, bilinçaltı, gizem, içsel bilgelik",
+            "meaning_reversed": "Gizli bilgilerin açığa çıkması, kararsızlık",
+            "description": "İçsel bilgelik ve sezgileri temsil eder. Gizli bilgilerin koruyucusudur.",
+            "keywords": ["sezgi", "gizem", "bilgelik", "pasiflik", "sabır"]
+        }
+    ],
+    "minor_arcana": {
+        "wands": [
+            {
+                "name": "Ace of Wands",
+                "turkish_name": "Değnek Ası",
+                "meaning_upright": "İlham, yaratıcılık, yeni başlangıçlar",
+                "meaning_reversed": "Gecikme, yaratıcı blokaj",
+                "description": "Yeni fırsatlar ve yaratıcı enerjinin başlangıcını temsil eder.",
+                "keywords": ["başlangıç", "ilham", "fırsat", "enerji"]
+            }
+        ],
+        "cups": [
+            {
+                "name": "Ace of Cups",
+                "turkish_name": "Kupa Ası",
+                "meaning_upright": "Yeni duygusal başlangıçlar, sevgi, sezgi",
+                "meaning_reversed": "Duygusal kayıp, durgunluk",
+                "description": "Yeni duygusal deneyimlerin ve ilişkilerin başlangıcını temsil eder.",
+                "keywords": ["sevgi", "duygu", "başlangıç", "mutluluk"]
+            }
+        ],
+        "swords": [
+            {
+                "name": "Ace of Swords",
+                "turkish_name": "Kılıç Ası",
+                "meaning_upright": "Zihinsel netlik, yeni fikirler, zafer",
+                "meaning_reversed": "Karmaşa, başarısızlık",
+                "description": "Yeni düşünce ve fikirlerin başlangıcını temsil eder.",
+                "keywords": ["netlik", "zafer", "güç", "akıl"]
+            }
+        ],
+        "pentacles": [
+            {
+                "name": "Ace of Pentacles",
+                "turkish_name": "Tılsım Ası",
+                "meaning_upright": "Maddi fırsatlar, refah, yeni başlangıçlar",
+                "meaning_reversed": "Kaçırılan fırsatlar, maddi kayıp",
+                "description": "Yeni maddi fırsatların ve refahın başlangıcını temsil eder.",
+                "keywords": ["fırsat", "refah", "bolluk", "güvenlik"]
+            }
+        ]
+    },
+    "spreads": {
+        "three_card": {
+            "name": "Üç Kart Açılımı",
+            "positions": [
+                {
+                    "name": "Geçmiş",
+                    "description": "Geçmişteki etkiler ve deneyimler"
+                },
+                {
+                    "name": "Şimdiki Zaman",
+                    "description": "Mevcut durum ve etkiler"
+                },
+                {
+                    "name": "Gelecek",
+                    "description": "Potansiyel sonuçlar ve olasılıklar"
+                }
+            ]
+        },
+        "celtic_cross": {
+            "name": "Kelt Haçı",
+            "positions": [
+                {
+                    "name": "Mevcut Durum",
+                    "description": "Soru soranın şu anki durumu"
+                },
+                {
+                    "name": "Zorluk",
+                    "description": "Karşılaşılan engel veya sorun"
+                }
+            ]
+        }
+    }
+} 
